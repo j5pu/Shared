@@ -1,1 +1,15 @@
+#!/bin/sh
+umask 002
 
+set -eu
+
+{
+if [ "$(basename "$0")" = 'install' ]; then
+  downloaded=true
+  ! command -v "${name}" >/dev/null || PATH="$(dirname "$0"):${PATH}"
+else
+  downloaded=false
+fi
+
+if test -d 
+}
