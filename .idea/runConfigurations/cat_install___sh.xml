@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="cat install | sh" type="BashProRunConfiguration" singleton="false">
-    <scriptContent>cat install | sh</scriptContent>
+    <scriptContent>git a; cat install | sh</scriptContent>
     <option name="sourceType" value="snippet" />
     <EXTENSION ID="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
