@@ -10,8 +10,6 @@ set -eu
 install() {
   cd "${src:-${tmp}}"
   . ./etc/profile
-  echo $PWD
-  ls $PWD
   ! test -d "${STOW_DIR?}/.git" || exit 0
   unset BASH_ENV
 }
@@ -35,7 +33,7 @@ main() {
       if command -v wget > /dev/null; then
         wget -qO- "${tarball}" | uncompress
       elif command -v git >/dev/null; then
-        git -C "${tmp}" clone --quiet --recurse "${url}"
+        git -C "${tmp}" clone --quiet "${url}"
         src="${tmp}/${repo}"
       elif command -v curl > /dev/null; then
         curl -fsSL "${tarball}" | uncompress
