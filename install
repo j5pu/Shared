@@ -32,14 +32,14 @@ main() {
       tmp="$(mktemp -d)"
       trap 'rm -rf "${tmp}"' EXIT
 
-      if command -v curl > /dev/null; then
-        curl -fsSL "${tarball}" | uncompress
+      if command -v wget > /dev/null; then
+        wget -qO- "${tarball}" | uncompress
       elif command -v git >/dev/null; then
         git -C "${tmp}" clone --quiet --recurse "${url}"
         src="${tmp}/${repo}"
       elif command -v curl > /dev/null; then
         curl -fsSL "${tarball}" | uncompress
-      elif command -v curl > /dev/null; then
+      elif command -v wget > /dev/null; then
         wget -qO- "${tarball}" | uncompress
       fi
       install "$@"
