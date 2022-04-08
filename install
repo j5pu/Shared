@@ -1,33 +1,54 @@
 #!/bin/sh
 
+#
+# Shared installer
 
 set -eu
 
 {
-  uncompress() { tar xvz - -C "${PREFIX}" --strip-components=1; }
-  
+
+install() {
+  cd "${src}"
+  echo $src
+  ls $src
+  . ./etc/profile
+  ! test -d "${STOW_DIR?}/.git" || exit 0
+  unset BASH_ENV
+}
+
+uncompress() { tar xvz - -C "${src}" --strip-components=1; }
+
+main() {
   umask 002
+
   owner="j5pu"
   repo="Shared"
+  script="${0##*/}"
   url="https://github.com/${owner}/${repo}"
   tarball="${url}/tarball/main"
-  
-  : "${PREFIX:=/Users/${name}}"
+  echo "${script}"
+  case "${script}" in
+    env|*sh)
+      tmp="$(mktemp -d)"
+      trap 'rm -rf "${tmp}"' EXIT
 
-  if [ "${0##*/}" = "install" ]; then
-    cd "$(dirname "$0")"
-    ! test -d "${PREFIX}/.git" || exit 0
-    ! command -v "${name}" >/dev/null || PATH="$(dirname "$0"):${PATH}"
-  else
-    tmp="$(mktemp -d)"
-    if command -v git >/dev/null; then
-      git -C "${tmp}" clone --quiet --recurse "${url}"
-    elif command -v curl > /dev/null; then
-      curl -fsSL "${tarball}" | uncompress
-    elif command -v curl > /dev/null; then
-      wget -qO- "${tarball}" | uncompress
-    fi
-    downloaded=false
-  fi
+      src="${tmp}/${repo}"
+      if command -v git >/dev/null; then
+        git -C "${tmp}" clone --quiet --recurse "${url}"
+      elif command -v curl > /dev/null; then
+        curl -fsSL "${tarball}" | uncompress
+      elif command -v curl > /dev/null; then
+        wget -qO- "${tarball}" | uncompress
+      fi
+      install "$@"
+      ;;
+    *)
+      src="$(dirname "${0}")"
+      install "$@"
+      ;;
+  esac
+}
+
+main "$@"
 
 }
