@@ -4,11 +4,12 @@
 set -eu
 
 {
-  uncompress() { tar xvz - -C "${tmp}"; }
+  uncompress() { tar xvz - -C "${PREFIX}" --strip-components=1; }
   
   umask 002
-  name="Shared"
-  url="https://github.com/j5pu/${name}"
+  owner="j5pu"
+  repo="Shared"
+  url="https://github.com/${owner}/${repo}"
   tarball="${url}/tarball/main"
   
   : "${PREFIX:=/Users/${name}}"
